@@ -1,0 +1,9 @@
+{
+  "user": {
+    "name": "fred",
+    "email": "fred@fred.fred",
+    "preferences": {
+      "likes_mowing_lawn": "notabool"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "results": {
+        "user": {
+          "name": "string",
+          "email": "string",
+          "preferences": {
+            "likes_mowing_lawns": "bool"
+          }
+        }
+      }
+    }
+  }
+}

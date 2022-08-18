@@ -1,0 +1,12 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "results": {
+        "user": {
+          "name": "string",
+          "email": "string"
+        }
+      }
+    }
+  }
+}

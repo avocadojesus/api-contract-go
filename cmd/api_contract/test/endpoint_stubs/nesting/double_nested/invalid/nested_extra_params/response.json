@@ -1,0 +1,12 @@
+{
+  "results": {
+    "user": {
+      "name": "fred",
+      "email": "fred@fred.fred",
+      "preferences": {
+        "likes_mowing_lawn": false,
+        "unexpected": "this is an unexpected param"
+      }
+    }
+  }
+}

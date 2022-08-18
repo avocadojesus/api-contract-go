@@ -1,0 +1,9 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "id": "number",
+      "id_as_float": "number",
+      "ids": "number[]"
+    }
+  }
+}
