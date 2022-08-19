@@ -3,7 +3,7 @@ package api_contract
 import (
   "fmt"
   "encoding/json"
-	"api-contract-go/cmd/api_contract/helpers"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
 )
 
 type EndpointData struct {

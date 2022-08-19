@@ -2,8 +2,8 @@ package api_contract_test
 
 import (
   "testing"
-	"api-contract-go/cmd/api_contract"
-	"api-contract-go/cmd/api_contract/test/helpers"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/test/helpers"
   "github.com/stretchr/testify/assert"
 )
 

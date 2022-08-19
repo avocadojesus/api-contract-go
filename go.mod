@@ -1,4 +1,4 @@
-module api-contract-go
+module github.com/avocadojesus/api-contract-go
 
 go 1.19
 

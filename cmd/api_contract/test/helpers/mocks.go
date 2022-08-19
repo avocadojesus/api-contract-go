@@ -4,7 +4,7 @@ import (
   "io/ioutil"
   "log"
   "fmt"
-	"api-contract-go/cmd/api_contract"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract"
 )
 
 var _readJSON func(_path string) []byte

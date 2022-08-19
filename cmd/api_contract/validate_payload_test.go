@@ -3,8 +3,8 @@ package api_contract_test
 import (
   "testing"
   "fmt"
-	"api-contract-go/cmd/api_contract"
-	"api-contract-go/cmd/api_contract/test/helpers"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/test/helpers"
 )
 
 func init() {

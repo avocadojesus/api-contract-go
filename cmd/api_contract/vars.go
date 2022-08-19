@@ -1,7 +1,7 @@
 package api_contract
 
 import (
-	"api-contract-go/cmd/api_contract/helpers"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
 )
 
 // this is used for stubbing in tests
