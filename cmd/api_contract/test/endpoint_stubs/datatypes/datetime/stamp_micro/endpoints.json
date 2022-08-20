@@ -1,0 +1,14 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "created_at": "datetime:stamp_micro",
+      "updated_at": "datetime:StampMicro",
+      "logged_in_at": "datetime:timestamp_micro",
+      "logged_out_at": "datetime:TimestampMicro",
+      "created_ats": "datetime:stamp_micro[]",
+      "updated_ats": "datetime:StampMicro[]",
+      "logged_in_ats": "datetime:timestamp_micro[]",
+      "logged_out_ats": "datetime:TimestampMicro[]"
+    }
+  }
+}

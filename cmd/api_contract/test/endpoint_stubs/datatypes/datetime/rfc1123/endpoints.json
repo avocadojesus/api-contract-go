@@ -1,0 +1,10 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "created_at": "datetime:rfc1123",
+      "updated_at": "datetime:RFC1123",
+      "created_ats": "datetime:rfc1123[]",
+      "updated_ats": "datetime:RFC1123[]"
+    }
+  }
+}

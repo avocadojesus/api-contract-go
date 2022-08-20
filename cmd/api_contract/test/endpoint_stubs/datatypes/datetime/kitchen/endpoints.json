@@ -1,0 +1,10 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "created_at": "datetime:kitchen",
+      "updated_at": "datetime:Kitchen",
+      "created_ats": "datetime:kitchen[]",
+      "updated_ats": "datetime:Kitchen[]"
+    }
+  }
+}
