@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-  api_contract_test_helpers.ChangeDirectoryToProjectRoot()
+  test_helpers.ChangeDirectoryToProjectRoot()
 }
 
 func TestValidate(t *testing.T) {
@@ -69,9 +69,9 @@ func TestValidate(t *testing.T) {
 func expectValidPayload(t *testing.T, endpointStubFolder string) {
   text := api_contract.ReadJSON(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/response.json", endpointStubFolder))
 
-  api_contract_test_helpers.MockJSONRead(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/endpoints.json", endpointStubFolder))
+  test_helpers.MockJSONRead(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/endpoints.json", endpointStubFolder))
   passedValidation, reason := api_contract.Validate([]byte(text), "POST", "/api/v1/test")
-  api_contract_test_helpers.RestoreJSONRead()
+  test_helpers.RestoreJSONRead()
 
   if !passedValidation {
     t.Error(fmt.Sprintf("Failed to validate %s, reason: ", endpointStubFolder), reason)
@@ -81,9 +81,9 @@ func expectValidPayload(t *testing.T, endpointStubFolder string) {
 func expectInvalidPayload(t *testing.T, endpointStubFolder string) {
   text := api_contract.ReadJSON(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/response.json", endpointStubFolder))
 
-  api_contract_test_helpers.MockJSONRead(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/endpoints.json", endpointStubFolder))
+  test_helpers.MockJSONRead(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/endpoints.json", endpointStubFolder))
   passedValidation, _ := api_contract.Validate([]byte(text), "POST", "/api/v1/test")
-  api_contract_test_helpers.RestoreJSONRead()
+  test_helpers.RestoreJSONRead()
 
   if passedValidation {
     t.Error(fmt.Sprintf("Expected %s to fail, but it didn't", endpointStubFolder))

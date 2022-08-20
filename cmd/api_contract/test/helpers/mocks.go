@@ -1,4 +1,4 @@
-package api_contract_test_helpers
+package test_helpers
 
 import (
   "io/ioutil"

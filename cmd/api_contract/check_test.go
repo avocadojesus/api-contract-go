@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-  api_contract_test_helpers.ChangeDirectoryToProjectRoot()
+  test_helpers.ChangeDirectoryToProjectRoot()
 }
 
 func TestCheck(t *testing.T) {
