@@ -4,7 +4,7 @@ import (
   "reflect"
   "time"
   "fmt"
-  // "github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
+  "regexp"
 )
 
 const DATE_FORMAT = "2006-01-02"
@@ -58,12 +58,23 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
       datatype, decorators, isArray := ParseDatatype(fmt.Sprintf("%s", paramType))
 
       switch datatype {
+      case "date":
+        format := findDateFormat(decorators)
+        if format == "" {
+          return false
+        }
+
+        if isArray {
+          return ValidateDateArrayCustomFormat(results[param].([]interface{}), format)
+        } else {
+          return ValidateDateCustomFormat(results[param].(interface{}), format)
+        }
+
       case "datetime":
         format := findDatetimeFormat(decorators)
         if format == "" {
           return false
         }
-
 
         if isArray {
           return ValidateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
@@ -106,6 +117,14 @@ func ValidateDatetimeCustomFormat(date interface{}, format string) bool {
   return err == nil
 }
 
+func ValidateDateCustomFormat(date interface{}, format string) bool {
+  matchFound, err := regexp.MatchString(format, fmt.Sprintf("%s", date))
+  if err != nil {
+    return false
+  }
+  return matchFound
+}
+
 func ValidateNumber(item interface{}) bool {
   itemType := reflect.TypeOf(item).String()
   return itemType == "float64"
@@ -146,6 +165,15 @@ func ValidateDatetimeArray(arr []interface{}) bool {
   return true
 }
 
+func ValidateDateArrayCustomFormat(arr []interface{}, format string) bool {
+  for _, item := range arr {
+    if !ValidateDateCustomFormat(item, format) {
+      return false
+    }
+  }
+  return true
+}
+
 func ValidateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
   for _, item := range arr {
     if !ValidateDatetimeCustomFormat(item, format) {
@@ -163,6 +191,20 @@ func checkArrayForType(arr []interface{}, expectedType string) bool {
     }
   }
   return true
+}
+
+func findDateFormat(arr []string) string {
+  if SliceContains(arr, "mmddyyyy") || SliceContains(arr, "MMDDYYYY") {
+    return Date.MMDDYYYY
+  } else if SliceContains(arr, "mmddyy") || SliceContains(arr, "MMDDYY") {
+    return Date.MMDDYY
+  } else if SliceContains(arr, "yyyymmdd") || SliceContains(arr, "YYYYMMDD") {
+    return Date.YYYYMMDD
+  } else if SliceContains(arr, "yymmdd") || SliceContains(arr, "YYMMDD") {
+    return Date.YYMMDD
+  } else {
+    return ""
+  }
 }
 
 func findDatetimeFormat(arr []string) string {

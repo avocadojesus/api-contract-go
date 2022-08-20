@@ -1,0 +1,10 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "created_on": "date:mmddyy",
+      "updated_on": "date:MMDDYY",
+      "created_ons": "date:mmddyy[]",
+      "updated_ons": "date:MMDDYY[]"
+    }
+  }
+}

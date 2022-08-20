@@ -31,6 +31,10 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "datatypes/bool/invalid/bad_array_data_type")
 
   expectValidPayload(t, "datatypes/date")
+  expectValidPayload(t, "datatypes/date/mmddyyyy")
+  expectValidPayload(t, "datatypes/date/mmddyy")
+  expectValidPayload(t, "datatypes/date/yyyymmdd")
+  expectValidPayload(t, "datatypes/date/yymmdd")
   expectInvalidPayload(t, "datatypes/date/invalid/bad_data_type")
   expectInvalidPayload(t, "datatypes/date/invalid/bad_array_data_type")
 
