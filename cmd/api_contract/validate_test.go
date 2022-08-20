@@ -11,7 +11,7 @@ func init() {
   api_contract_test_helpers.ChangeDirectoryToProjectRoot()
 }
 
-func TestValidatePayload(t *testing.T) {
+func TestValidate(t *testing.T) {
   expectValidPayload(t, "nesting/basic")
   expectInvalidPayload(t, "nesting/basic/invalid/extra_params")
   expectInvalidPayload(t, "nesting/basic/invalid/nested_extra_params")
@@ -51,7 +51,7 @@ func expectValidPayload(t *testing.T, endpointStubFolder string) {
   text := api_contract.ReadJSON(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/response.json", endpointStubFolder))
 
   api_contract_test_helpers.MockJSONRead(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/endpoints.json", endpointStubFolder))
-  passedValidation, reason := api_contract.ValidatePayload([]byte(text), "POST", "/api/v1/test")
+  passedValidation, reason := api_contract.Validate([]byte(text), "POST", "/api/v1/test")
   api_contract_test_helpers.RestoreJSONRead()
 
   if !passedValidation {
@@ -63,7 +63,7 @@ func expectInvalidPayload(t *testing.T, endpointStubFolder string) {
   text := api_contract.ReadJSON(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/response.json", endpointStubFolder))
 
   api_contract_test_helpers.MockJSONRead(fmt.Sprintf("./cmd/api_contract/test/endpoint_stubs/%s/endpoints.json", endpointStubFolder))
-  passedValidation, _ := api_contract.ValidatePayload([]byte(text), "POST", "/api/v1/test")
+  passedValidation, _ := api_contract.Validate([]byte(text), "POST", "/api/v1/test")
   api_contract_test_helpers.RestoreJSONRead()
 
   if passedValidation {

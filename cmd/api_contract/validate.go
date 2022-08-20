@@ -10,7 +10,7 @@ type EndpointData struct {
   PayloadShape map[string]interface{} `json:"payload_shape"`
 }
 
-func ValidatePayload(bytes []byte, httpMethod string, endpoint string) (bool, string) {
+func Validate(bytes []byte, httpMethod string, endpoint string) (bool, string) {
   var results map[string]interface{}
   json.Unmarshal(bytes, &results)
 
@@ -20,7 +20,7 @@ func ValidatePayload(bytes []byte, httpMethod string, endpoint string) (bool, st
 
   if foundEndpoint != nil {
     for param, paramType := range foundEndpoint.PayloadShape {
-      if !api_contract_helpers.ValidatePayloadShapeForParam(param, paramType, results) {
+      if !api_contract_helpers.ValidateParam(param, paramType, results) {
         return false, fmt.Sprintf("The param `%s` does not match expected type `%s`", param, paramType)
       }
     }

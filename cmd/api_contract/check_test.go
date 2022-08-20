@@ -11,7 +11,7 @@ func init() {
   api_contract_test_helpers.ChangeDirectoryToProjectRoot()
 }
 
-func TestExpectValidPayload(t *testing.T) {
+func TestCheck(t *testing.T) {
   expectValidPayloadToPass(t)
   expectInvalidPayloadToThrow(t)
 }
@@ -22,10 +22,10 @@ func expectInvalidPayloadToThrow(t *testing.T) {
     errorCalled = true
   }
 
-  api_contract.InternalValidatePayload = func (bytes []byte, httpMethod string, endpoint string) (bool, string) {
+  api_contract.InternalValidate = func (bytes []byte, httpMethod string, endpoint string) (bool, string) {
     return true, ""
   }
-  api_contract.ExpectValidPayload([]byte(""), "POST", "/api/v1/test", _error)
+  api_contract.Check([]byte(""), "POST", "/api/v1/test", _error)
   assert.False(t, errorCalled)
 }
 
@@ -35,9 +35,9 @@ func expectValidPayloadToPass(t *testing.T) {
     errorCalled = true
   }
 
-  api_contract.InternalValidatePayload = func (bytes []byte, httpMethod string, endpoint string) (bool, string) {
+  api_contract.InternalValidate = func (bytes []byte, httpMethod string, endpoint string) (bool, string) {
     return false, "something went wrong"
   }
-  api_contract.ExpectValidPayload([]byte(""), "POST", "/api/v1/test", _error)
+  api_contract.Check([]byte(""), "POST", "/api/v1/test", _error)
   assert.True(t, errorCalled)
 }

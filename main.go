@@ -4,5 +4,5 @@ import (
   "github.com/avocadojesus/api-contract-go/cmd/api_contract"
 )
 
-var Check = api_contract.ExpectValidPayload
-var Validate = api_contract.ValidatePayload
+var Check = api_contract.Check
+var Validate = api_contract.Validate
