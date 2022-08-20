@@ -5,5 +5,5 @@ import (
 )
 
 // this is used for stubbing in tests
-var ReadJSON = api_contract_helpers.ReadJSON
+var ReadJSON = helpers.ReadJSON
 var InternalValidate = Validate

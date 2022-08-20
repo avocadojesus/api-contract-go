@@ -1,4 +1,4 @@
-package api_contract_helpers
+package helpers
 
 type IDate struct {
   MMDDYYYY string

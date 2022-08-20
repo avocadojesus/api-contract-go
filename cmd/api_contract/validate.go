@@ -20,13 +20,13 @@ func Validate(bytes []byte, httpMethod string, endpoint string) (bool, string) {
 
   if foundEndpoint != nil {
     for param, paramType := range foundEndpoint.PayloadShape {
-      if !api_contract_helpers.ValidateParam(param, paramType, results) {
+      if !helpers.ValidateParam(param, paramType, results) {
         return false, fmt.Sprintf("The param `%s` does not match expected type `%s`", param, paramType)
       }
     }
   }
 
-  if !api_contract_helpers.CheckPayloadForUnexpectedKeys(results, foundEndpoint.PayloadShape) {
+  if !helpers.CheckPayloadForUnexpectedKeys(results, foundEndpoint.PayloadShape) {
     return false, "Unexpected keys found"
   }
 

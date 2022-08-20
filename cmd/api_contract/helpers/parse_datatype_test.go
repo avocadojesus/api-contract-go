@@ -1,4 +1,4 @@
-package api_contract_helpers_test
+package helpers_test
 
 import (
   "testing"
@@ -50,7 +50,7 @@ func TestParseDatatype(t *testing.T) {
 }
 
 func assertDatatypeMatch(t *testing.T, str string, expectedDatatype string, expectedDecorators []string, expectedIsArray bool) {
-  dataType, decorators, isArray := api_contract_helpers.ParseDatatype(str)
+  dataType, decorators, isArray := helpers.ParseDatatype(str)
   assert.Equal(t, dataType, expectedDatatype)
   assert.Equal(t, decorators, expectedDecorators)
   assert.Equal(t, isArray, expectedIsArray)

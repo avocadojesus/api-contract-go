@@ -1,4 +1,4 @@
-package api_contract_helpers
+package helpers
 
 func SliceContains(arr []string, matchString string) bool {
   for _, a := range arr {
