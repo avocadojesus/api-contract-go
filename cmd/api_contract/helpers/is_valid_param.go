@@ -10,7 +10,7 @@ import (
 const DATE_FORMAT = "2006-01-02"
 const DATETIME_FORMAT = time.RFC3339
 
-func ValidateParam(param string, paramType interface{}, results map[string]interface{}) bool {
+func IsValidParam(param string, paramType interface{}, results map[string]interface{}) bool {
   if results[param] == nil {
     return false
   }
@@ -20,7 +20,7 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
   if IsMap(results[param]) && IsMap(paramType) {
     for key, _ := range results[param].(map[string]interface{}) {
       expectedType := paramType.(map[string]interface{})[key]
-      if !ValidateParam(key, expectedType, results[param].(map[string]interface{})) {
+      if !IsValidParam(key, expectedType, results[param].(map[string]interface{})) {
         return false
       }
     }
@@ -34,22 +34,22 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
       return ValidateBoolArray(results[param].([]interface{}))
 
     case "date":
-      return ValidateDate(results[param].(interface{}))
+      return validateDate(results[param].(interface{}))
 
     case "date[]":
-      return ValidateDateArray(results[param].([]interface{}))
+      return validateDateArray(results[param].([]interface{}))
 
     case "datetime":
-      return ValidateDatetime(results[param].(interface{}))
+      return validateDatetime(results[param].(interface{}))
 
     case "datetime[]":
-      return ValidateDatetimeArray(results[param].([]interface{}))
+      return validateDatetimeArray(results[param].([]interface{}))
 
     case "number":
-      return ValidateNumber(results[param].(interface{}))
+      return validateNumber(results[param].(interface{}))
 
     case "number[]":
-      return ValidateNumberArray(results[param].([]interface{}))
+      return validateNumberArray(results[param].([]interface{}))
 
     case "string[]":
       return ValidateStringArray(results[param].([]interface{}))
@@ -65,9 +65,9 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
         }
 
         if isArray {
-          return ValidateDateArrayCustomFormat(results[param].([]interface{}), format)
+          return validateDateArrayCustomFormat(results[param].([]interface{}), format)
         } else {
-          return ValidateDateCustomFormat(results[param].(interface{}), format)
+          return validateDateCustomFormat(results[param].(interface{}), format)
         }
 
       case "datetime":
@@ -77,9 +77,9 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
         }
 
         if isArray {
-          return ValidateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
+          return validateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
         } else {
-          return ValidateDatetimeCustomFormat(results[param].(interface{}), format)
+          return validateDatetimeCustomFormat(results[param].(interface{}), format)
         }
 
       default:
@@ -89,35 +89,22 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
   }
 }
 
-func CheckPayloadForUnexpectedKeys(results map[string]interface{}, endpoints map[string]interface{}) bool {
-  for key, val := range results {
-    if IsMap(val) && IsMap(endpoints[key]) {
-      return CheckPayloadForUnexpectedKeys(results[key].(map[string]interface{}), endpoints[key].(map[string]interface{}))
-    } else {
-      if results[key] != nil && endpoints[key] == nil {
-        return false
-      }
-    }
-  }
-  return true
-}
-
-func ValidateDate(date interface{}) bool {
+func validateDate(date interface{}) bool {
   _, err := time.Parse(DATE_FORMAT, fmt.Sprintf("%s", date))
   return err == nil
 }
 
-func ValidateDatetime(date interface{}) bool {
+func validateDatetime(date interface{}) bool {
   _, err := time.Parse(DATETIME_FORMAT, fmt.Sprintf("%s", date))
   return err == nil
 }
 
-func ValidateDatetimeCustomFormat(date interface{}, format string) bool {
+func validateDatetimeCustomFormat(date interface{}, format string) bool {
   _, err := time.Parse(format, fmt.Sprintf("%s", date))
   return err == nil
 }
 
-func ValidateDateCustomFormat(date interface{}, format string) bool {
+func validateDateCustomFormat(date interface{}, format string) bool {
   matchFound, err := regexp.MatchString(format, fmt.Sprintf("%s", date))
   if err != nil {
     return false
@@ -125,7 +112,7 @@ func ValidateDateCustomFormat(date interface{}, format string) bool {
   return matchFound
 }
 
-func ValidateNumber(item interface{}) bool {
+func validateNumber(item interface{}) bool {
   itemType := reflect.TypeOf(item).String()
   return itemType == "float64"
 }
@@ -138,45 +125,45 @@ func ValidateStringArray(arr []interface{}) bool {
   return checkArrayForType(arr, "string")
 }
 
-func ValidateNumberArray(arr []interface{}) bool {
+func validateNumberArray(arr []interface{}) bool {
   for _, item := range arr {
-    if !ValidateNumber(item) {
+    if !validateNumber(item) {
       return false
     }
   }
   return true
 }
 
-func ValidateDateArray(arr []interface{}) bool {
+func validateDateArray(arr []interface{}) bool {
   for _, item := range arr {
-    if !ValidateDate(item) {
+    if !validateDate(item) {
       return false
     }
   }
   return true
 }
 
-func ValidateDatetimeArray(arr []interface{}) bool {
+func validateDatetimeArray(arr []interface{}) bool {
   for _, item := range arr {
-    if !ValidateDatetime(item) {
+    if !validateDatetime(item) {
       return false
     }
   }
   return true
 }
 
-func ValidateDateArrayCustomFormat(arr []interface{}, format string) bool {
+func validateDateArrayCustomFormat(arr []interface{}, format string) bool {
   for _, item := range arr {
-    if !ValidateDateCustomFormat(item, format) {
+    if !validateDateCustomFormat(item, format) {
       return false
     }
   }
   return true
 }
 
-func ValidateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
+func validateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
   for _, item := range arr {
-    if !ValidateDatetimeCustomFormat(item, format) {
+    if !validateDatetimeCustomFormat(item, format) {
       return false
     }
   }
