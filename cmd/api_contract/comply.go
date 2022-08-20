@@ -4,7 +4,7 @@ import (
   "fmt"
 )
 
-func Check(bytes []byte, httpMethod string, endpoint string, err func(args ...any)) {
+func Comply(bytes []byte, httpMethod string, endpoint string, err func(args ...any)) {
   passedValidation, reason := InternalValidate(bytes, httpMethod, endpoint)
 
   if !passedValidation {
