@@ -18,7 +18,7 @@ func MockJSONRead(path string) {
     d, err := ioutil.ReadFile(fullPath)
 
     if err != nil {
-      log.Fatal(fmt.Sprintf("Missing JSON file: %s", fullPath), err)
+      log.Fatal(fmt.Sprintf("Missing JSON file (from MockJSONRead): %s", fullPath), err)
     }
 
     return d
