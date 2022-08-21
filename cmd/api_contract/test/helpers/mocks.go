@@ -5,6 +5,7 @@ import (
   "log"
   "fmt"
 	"github.com/avocadojesus/api-contract-go/cmd/api_contract"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
 )
 
 var _readJSON func(_path string) []byte
@@ -12,10 +13,12 @@ func MockJSONRead(path string) {
   _readJSON = api_contract.ReadJSON
 
   api_contract.ReadJSON = func(_path string) []byte {
-    d, err := ioutil.ReadFile(path)
+    projectRoot := helpers.FindProjectRoot()
+    fullPath := projectRoot + "/" + path
+    d, err := ioutil.ReadFile(fullPath)
 
     if err != nil {
-      log.Fatal(fmt.Sprintf("Missing JSON file: %s", path), err)
+      log.Fatal(fmt.Sprintf("Missing JSON file: %s", fullPath), err)
     }
 
     return d

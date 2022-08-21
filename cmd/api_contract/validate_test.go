@@ -7,10 +7,6 @@ import (
 	"github.com/avocadojesus/api-contract-go/cmd/api_contract/test/helpers"
 )
 
-func init() {
-  test_helpers.ChangeDirectoryToProjectRoot()
-}
-
 func TestValidate(t *testing.T) {
   expectValidPayload(t, "nesting/basic")
   expectInvalidPayload(t, "nesting/basic/invalid/extra_params")

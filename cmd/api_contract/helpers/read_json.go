@@ -7,12 +7,13 @@ import (
 )
 
 func ReadJSON(path string) []byte {
-  d, err := ioutil.ReadFile(path)
+  projectRoot := FindProjectRoot()
+  fullPath := projectRoot + "/" + path
+  d, err := ioutil.ReadFile(fullPath)
 
   if err != nil {
-    log.Fatal(fmt.Sprintf("Missing JSON file: %s", path), err)
+    log.Fatal(fmt.Sprintf("Missing JSON filezzzzz: %s\n", projectRoot), err)
   }
 
   return d
 }
-
