@@ -3,13 +3,8 @@ package api_contract_test
 import (
   "testing"
 	"github.com/avocadojesus/api-contract-go/cmd/api_contract"
-	"github.com/avocadojesus/api-contract-go/cmd/api_contract/test/helpers"
   "github.com/stretchr/testify/assert"
 )
-
-func init() {
-  test_helpers.ChangeDirectoryToProjectRoot()
-}
 
 func TestComply(t *testing.T) {
   expectValidPayloadToPass(t)
