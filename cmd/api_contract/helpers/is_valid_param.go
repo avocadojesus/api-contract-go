@@ -5,6 +5,7 @@ import (
   "time"
   "fmt"
   "regexp"
+  "github.com/avocadojesus/api-contract-go/cmd/api_contract/validators"
 )
 
 const DATE_FORMAT = "2006-01-02"
@@ -52,7 +53,7 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
       return validateNumberArray(results[param].([]interface{}))
 
     case "string[]":
-      return ValidateStringArray(results[param].([]interface{}))
+      return validators.ValidateStringArray(results[param].([]interface{}))
 
     default:
       datatype, decorators, isArray := ParseDatatype(fmt.Sprintf("%s", paramType))
@@ -63,15 +64,15 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
           return typeOfReturnedValue == paramType
         }
 
-        format := findStringFormat(decorators)
+        format := validators.FindStringFormat(decorators)
         if format == "" {
           return false
         }
 
         if isArray {
-          return validateStringArrayCustomFormat(results[param].([]interface{}), format)
+          return validators.ValidateStringArrayCustomFormat(results[param].([]interface{}), format)
         } else {
-          return validateStringCustomFormat(results[param].(interface{}), format)
+          return validators.ValidateStringCustomFormat(results[param].(interface{}), format)
         }
 
       case "number":
@@ -131,30 +132,6 @@ func validateDatetime(date interface{}) bool {
   return err == nil
 }
 
-func validateStringCustomFormat(str interface{}, format string) bool {
-  var matchFound bool
-  var err interface{}
-  switch(format) {
-  case "email":
-    matchFound, err = regexp.MatchString(`^.*@.*\..*$`, fmt.Sprintf("%s", str))
-
-  case "name":
-    matchFound, err = regexp.MatchString(`^[A-Za-z]*$`, fmt.Sprintf("%s", str))
-
-  case "fullname":
-    matchFound, err = regexp.MatchString(`^[A-Za-z]* [A-Za-z]*\s?[A-Za-z]{0,}$`, fmt.Sprintf("%s", str))
-
-  default:
-    panic(fmt.Sprintf("could not validate custom string %s to format %s", str, format))
-  }
-
-  if err != nil {
-    return false
-  }
-
-  return matchFound
-}
-
 func validateNumberCustomFormat(num interface{}, format string) bool {
   var matchFound bool
   var err interface{}
@@ -197,11 +174,7 @@ func validateNumber(item interface{}) bool {
 }
 
 func ValidateBoolArray(arr []interface{}) bool {
-  return checkArrayForType(arr, "bool")
-}
-
-func ValidateStringArray(arr []interface{}) bool {
-  return checkArrayForType(arr, "string")
+  return validators.CheckArrayForType(arr, "bool")
 }
 
 func validateNumberArray(arr []interface{}) bool {
@@ -216,15 +189,6 @@ func validateNumberArray(arr []interface{}) bool {
 func validateDateArray(arr []interface{}) bool {
   for _, item := range arr {
     if !validateDate(item) {
-      return false
-    }
-  }
-  return true
-}
-
-func validateStringArrayCustomFormat(arr []interface{}, format string) bool {
-  for _, item := range arr {
-    if !validateStringCustomFormat(item, format) {
       return false
     }
   }
@@ -267,32 +231,10 @@ func validateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
   return true
 }
 
-func checkArrayForType(arr []interface{}, expectedType string) bool {
-  for _, item := range arr {
-    itemType := reflect.TypeOf(item).String()
-    if itemType != expectedType {
-      return false
-    }
-  }
-  return true
-}
-
-func findStringFormat(arr []string) string {
-  if SliceContains(arr, "email") {
-    return "email"
-  } else if SliceContains(arr, "name") {
-    return "name"
-  } else if SliceContains(arr, "fullname") {
-    return "fullname"
-  } else {
-    return ""
-  }
-}
-
 func findNumberFormat(arr []string) string {
-  if SliceContains(arr, "float") {
+  if validators.SliceContains(arr, "float") {
     return "float"
-  } else if SliceContains(arr, "bigint") {
+  } else if validators.SliceContains(arr, "bigint") {
     return "bigint"
   } else {
     return ""
@@ -300,13 +242,13 @@ func findNumberFormat(arr []string) string {
 }
 
 func findDateFormat(arr []string) string {
-  if SliceContains(arr, "mmddyyyy") || SliceContains(arr, "MMDDYYYY") {
+  if validators.SliceContains(arr, "mmddyyyy") || validators.SliceContains(arr, "MMDDYYYY") {
     return Date.MMDDYYYY
-  } else if SliceContains(arr, "mmddyy") || SliceContains(arr, "MMDDYY") {
+  } else if validators.SliceContains(arr, "mmddyy") || validators.SliceContains(arr, "MMDDYY") {
     return Date.MMDDYY
-  } else if SliceContains(arr, "yyyymmdd") || SliceContains(arr, "YYYYMMDD") {
+  } else if validators.SliceContains(arr, "yyyymmdd") || validators.SliceContains(arr, "YYYYMMDD") {
     return Date.YYYYMMDD
-  } else if SliceContains(arr, "yymmdd") || SliceContains(arr, "YYMMDD") {
+  } else if validators.SliceContains(arr, "yymmdd") || validators.SliceContains(arr, "YYMMDD") {
     return Date.YYMMDD
   } else {
     return ""
@@ -314,53 +256,53 @@ func findDateFormat(arr []string) string {
 }
 
 func findDatetimeFormat(arr []string) string {
-  if SliceContains(arr, "ansic") {
+  if validators.SliceContains(arr, "ansic") {
     return time.ANSIC
-  } else if (SliceContains(arr, "iso861") || SliceContains(arr, "ISO861")) {
+  } else if (validators.SliceContains(arr, "iso861") || validators.SliceContains(arr, "ISO861")) {
     return time.RFC3339
-  } else if (SliceContains(arr, "unix_date") || SliceContains(arr, "unix")) {
+  } else if (validators.SliceContains(arr, "unix_date") || validators.SliceContains(arr, "unix")) {
     return time.UnixDate
-  } else if (SliceContains(arr, "ruby_date") || SliceContains(arr, "ruby")) {
+  } else if (validators.SliceContains(arr, "ruby_date") || validators.SliceContains(arr, "ruby")) {
     return time.RubyDate
-  } else if (SliceContains(arr, "rfc822") || SliceContains(arr, "RFC822")) {
+  } else if (validators.SliceContains(arr, "rfc822") || validators.SliceContains(arr, "RFC822")) {
     return time.RFC822
-  } else if (SliceContains(arr, "rfc822z") || SliceContains(arr, "RFC822Z")) {
+  } else if (validators.SliceContains(arr, "rfc822z") || validators.SliceContains(arr, "RFC822Z")) {
     return time.RFC822Z
-  } else if (SliceContains(arr, "rfc850") || SliceContains(arr, "RFC850")) {
+  } else if (validators.SliceContains(arr, "rfc850") || validators.SliceContains(arr, "RFC850")) {
     return time.RFC850
-  } else if (SliceContains(arr, "rfc1123") || SliceContains(arr, "RFC1123")) {
+  } else if (validators.SliceContains(arr, "rfc1123") || validators.SliceContains(arr, "RFC1123")) {
     return time.RFC1123
-  } else if (SliceContains(arr, "rfc1123z") || SliceContains(arr, "RFC1123Z")) {
+  } else if (validators.SliceContains(arr, "rfc1123z") || validators.SliceContains(arr, "RFC1123Z")) {
     return time.RFC1123Z
-  } else if (SliceContains(arr, "rfc3339") || SliceContains(arr, "RFC3339")) {
+  } else if (validators.SliceContains(arr, "rfc3339") || validators.SliceContains(arr, "RFC3339")) {
     return time.RFC3339
-  } else if (SliceContains(arr, "rfc3339_nano") || SliceContains(arr, "RFC3339Nano")) {
+  } else if (validators.SliceContains(arr, "rfc3339_nano") || validators.SliceContains(arr, "RFC3339Nano")) {
     return time.RFC3339Nano
-  } else if (SliceContains(arr, "kitchen") || SliceContains(arr, "Kitchen")) {
+  } else if (validators.SliceContains(arr, "kitchen") || validators.SliceContains(arr, "Kitchen")) {
     return time.Kitchen
   } else if
-    SliceContains(arr, "stamp") ||
-      SliceContains(arr, "Stamp") ||
-      SliceContains(arr, "timestamp") ||
-      SliceContains(arr, "Timestamp") {
+    validators.SliceContains(arr, "stamp") ||
+      validators.SliceContains(arr, "Stamp") ||
+      validators.SliceContains(arr, "timestamp") ||
+      validators.SliceContains(arr, "Timestamp") {
     return time.Stamp
   } else if
-    SliceContains(arr, "stamp_milli") ||
-      SliceContains(arr, "StampMilli") ||
-      SliceContains(arr, "timestamp_milli") ||
-      SliceContains(arr, "TimestampMilli") {
+    validators.SliceContains(arr, "stamp_milli") ||
+      validators.SliceContains(arr, "StampMilli") ||
+      validators.SliceContains(arr, "timestamp_milli") ||
+      validators.SliceContains(arr, "TimestampMilli") {
     return time.StampMilli
   } else if
-    SliceContains(arr, "stamp_micro") ||
-      SliceContains(arr, "StampMicro") ||
-      SliceContains(arr, "timestamp_micro") ||
-      SliceContains(arr, "TimestampMicro") {
+    validators.SliceContains(arr, "stamp_micro") ||
+      validators.SliceContains(arr, "StampMicro") ||
+      validators.SliceContains(arr, "timestamp_micro") ||
+      validators.SliceContains(arr, "TimestampMicro") {
     return time.StampMicro
   } else if
-    SliceContains(arr, "stamp_nano") ||
-      SliceContains(arr, "StampNano") ||
-      SliceContains(arr, "timestamp_nano") ||
-      SliceContains(arr, "TimestampNano") {
+    validators.SliceContains(arr, "stamp_nano") ||
+      validators.SliceContains(arr, "StampNano") ||
+      validators.SliceContains(arr, "timestamp_nano") ||
+      validators.SliceContains(arr, "TimestampNano") {
     return time.StampNano
   } else {
     return ""
