@@ -1,6 +1,18 @@
+# Api Contract
+
+API Contract was a concept developed as an attempt to solve a critical problem facing many in the modern web development world who decide to partition their teams into segregated front and back end teams. As these teams build their apps out, it becomes difficult to consistently agree with their backend counterparts about which api endpoint we are expressing, leading to many headaches and production bugs caused by a lack of ability to do proper integration testing.
+
+The solution proposed through `Api Contract` is to develop a single source of truth json file that both teams can share, as well as test helpers that can provide a bridge where proper integration testing is not possible.
+
+To implement such a solution, there are several repos providing sensible implementations of this for teams, depending on what they are doing. For instance, if you are developing a backend JSON api to be consumed by a separate frontend team, Api Contract provides repos for your stack that allow you to granularly test your payload shapes to make sure they follow the correct formatting.
+
+However, if you are on a frontend team writing in react or vuejs, Api Conract provides a repo which sidechains to your feature spec runs, providing a dummy REST API server at a port of your choosing which will listen at the same endpoints exposed in the `api-contract.json` file at the root of your frontend repo, and will serve dummy payloads in the exact shape expressed by the json file.
+
+This allows the front-end team to spike on an agreed feature as though the backend team had already built the endpoint to spec, and ensures that once the backend team and frontend team do a coordinated deployment (after building their features using our provided test helpers to validate the shape of their own endpoints), the apps should gel together perfectly without any headaches or deployment nightmares.
+
 # api-contract-go
 
-implements test helpers to validate structure of JSON apis
+implements test helpers to validate structure of JSON apis for backend teams implementing the `Api Contract` approach.
 
 # Installation
 
