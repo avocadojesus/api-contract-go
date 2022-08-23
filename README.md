@@ -137,3 +137,136 @@ func TestMe(t *testing.T) {
   }
 }
 ```
+
+## Contract API
+
+The contract API refers to the way in which an `api-contract.json` file can be composed. To integrate, one needs to expose all of their endpoints to a json file, carefully exposing the intended types for each param expected in the response payload, like so:
+
+#### Basic example
+
+```json
+{
+  "GET:/api/v1/users/:id": {
+    "payload_shape": {
+      "user": {
+        "id": "number",
+        "email": "string",
+        "created_at": "datetime"
+      }
+    }
+  }
+}
+```
+
+#### Nesting Example
+
+The api supports infinite nested structures, allowing you to express payloads like:
+
+```json
+{
+  "GET:/api/v1/users/:id": {
+    "payload_shape": {
+      "user": {
+        "preferences": {
+          "inapp": {
+            "marketing": {
+              "send_emails": "bool"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Datatypes
+
+All datatypes supported natively by JSON are supported here, with the addition of the `date` and `datetime` datatypes, which have an expressive api for determining which format to use to validate/generate them.
+
+##### Primary datatypes
+
+* `string`
+* `number`
+* `bool`
+* `date`
+* `datetime`
+
+These datatypes can be seen below in their most basic format:
+
+```json
+{
+  "GET:/api/v1/users/:id": {
+    "payload_shape": {
+      "user": {
+        "id": "number",
+        "email": "string",
+        "likes_cats": "bool",
+        "created_at": "datetime",
+        "updated_on": "date"
+      }
+    }
+  }
+}
+```
+
+All Primary types can additionally represent arrays, like so:
+
+#### Using array values
+```json
+{
+  "GET:/api/v1/users/:id": {
+    "payload_shape": {
+      "user": {
+        "id": "number[]",
+        "email": "string[]",
+        "likes_cats": "bool[]",
+        "created_at": "datetime[]",
+        "updated_on": "date[]"
+      }
+    }
+  }
+}
+```
+
+They can additionally take on extended parameters (called `decorators` in the codebase), which allow them to narrow down in format, like so:
+
+```json
+{
+  "GET:/api/v1/users/:id": {
+    "payload_shape": {
+      "amount": "number:float"
+    }
+  }
+}
+```
+
+The full list of decorators supported (varying by type) can be found below:
+
+#### Decorator API
+
+* `string:email`: loosely formats for email. The test server will generate random email addresses using `faker` if this is specified.
+* `string:name`: loosely formats for name. The test server will generate random names using `faker` if this is specified.
+* `string:name`: Similar to name, but will generate a full name instead of a first name.
+* `number:float`: creates a floating point number (with decimal precision of 2)
+* `number:bigint`: creates a large int, i.e. `580405389235143`
+* `date:yyyymmdd`: generates dates with the format `YYYY-MM-DD`
+* `date:yymmdd`: generates dates with the format `YY-MM-DD`
+* `date:mmddyyyy`: generates dates with the format `MM-DD-YYYY`
+* `date:mmddyy`: generates dates with the format `MM-DD-YY`
+* `datetime:ansic`: generates **ansic**-formatted datetimes (i.e. `Mon Jan 22 15:04:05 2006`)
+* `datetime:iso861`: generates **ISO861**-formatted datetimes (i.e. `2022-04-07T00:00:00.000-07:00`)
+* `datetime:kitchen`: generates a time similar to a kitchen clock (i.e. `7:04PM`)
+* `datetime:rfc1123`: generates **RFC1123**-formatted datetimes (i.e. `Sat, 20 Aug 2022 07:22:19 PDT`)
+* `datetime:rfc1123z`: generates **RFC1123Z**-formatted datetimes (i.e. `Sat, 20 Aug 2022 07:24:17 -0700`)
+* `datetime:rfcrfc3339`: generates **RFC3339**-formatted datetimes (i.e. `2022-08-20T07:27:56-07:00`)
+* `datetime:rfcrfc3339_nano`: generates **RFC3339Nano**-formatted datetimes (i.e. `2022-08-20T07:33:33.671227-07:00`)
+* `datetime:rfc822`: generates **RFC822**-formatted datetimes (i.e. `20 Aug 22 07:16 PDT`)
+* `datetime:rfc822z`: generates **RFC822Z**-formatted datetimes (i.e. `20 Aug 22 07:17 -0700`)
+* `datetime:rfc850`: generates **RFC850**-formatted datetimes (i.e. `Saturday, 20-Aug-22 07:20:10 PDT`)
+* `datetime:ruby_date`: generates **RubyDate**-formatted datetimes (i.e. `Sat Aug 20 07:12:29 -0700 2022`)
+* `datetime:stamp`: generates **Stamp**-formatted datetimes (i.e. `Aug 20 07:40:43`)
+* `datetime:stamp_micro`: generates **StampMicro**-formatted datetimes (i.e. `Aug 20 07:45:26.087422`)
+* `datetime:stamp_milli`: generates **StampMilli**-formatted datetimes (i.e. `Aug 20 07:43:36.680`)
+* `datetime:stamp_nano`: generates **StampNano**-formatted datetimes (i.e. `Aug 20 07:47:27.520037000`)
+* `datetime:unix`: generates **Unix**-formatted datetimes (i.e. `Sat Aug 20 07:06:22 PDT 2022`)
