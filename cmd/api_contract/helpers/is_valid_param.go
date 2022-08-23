@@ -74,6 +74,22 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
           return validateStringCustomFormat(results[param].(interface{}), format)
         }
 
+      case "number":
+        if (len(decorators) == 0) {
+          return validateNumber(results[param].(interface{}))
+        }
+
+        format := findNumberFormat(decorators)
+        if format == "" {
+          return false
+        }
+
+        if isArray {
+          return validateNumberArrayCustomFormat(results[param].([]interface{}), format)
+        } else {
+          return validateNumberCustomFormat(results[param].(interface{}), format)
+        }
+
       case "date":
         format := findDateFormat(decorators)
         if format == "" {
@@ -139,6 +155,29 @@ func validateStringCustomFormat(str interface{}, format string) bool {
   return matchFound
 }
 
+func validateNumberCustomFormat(num interface{}, format string) bool {
+  var matchFound bool
+  var err interface{}
+  switch(format) {
+  case "bigint":
+    matchFound, err = regexp.MatchString(`^\d{1,}$`, fmt.Sprintf("%v", num))
+    break
+
+  case "float":
+    matchFound, err = regexp.MatchString(`^\d{1,}\.\d{1,}$`, fmt.Sprintf("%.2f", num))
+    break
+
+  default:
+    panic(fmt.Sprintf("could not validate custom string %s to format %s", num, format))
+  }
+
+  if err != nil {
+    return false
+  }
+
+  return matchFound
+}
+
 func validateDatetimeCustomFormat(date interface{}, format string) bool {
   _, err := time.Parse(format, fmt.Sprintf("%s", date))
   return err == nil
@@ -192,6 +231,15 @@ func validateStringArrayCustomFormat(arr []interface{}, format string) bool {
   return true
 }
 
+func validateNumberArrayCustomFormat(arr []interface{}, format string) bool {
+  for _, item := range arr {
+    if !validateNumberCustomFormat(item, format) {
+      return false
+    }
+  }
+  return true
+}
+
 func validateDatetimeArray(arr []interface{}) bool {
   for _, item := range arr {
     if !validateDatetime(item) {
@@ -236,6 +284,16 @@ func findStringFormat(arr []string) string {
     return "name"
   } else if SliceContains(arr, "fullname") {
     return "fullname"
+  } else {
+    return ""
+  }
+}
+
+func findNumberFormat(arr []string) string {
+  if SliceContains(arr, "float") {
+    return "float"
+  } else if SliceContains(arr, "bigint") {
+    return "bigint"
   } else {
     return ""
   }
