@@ -32,7 +32,7 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
 
     switch paramType {
     case "bool[]":
-      return ValidateBoolArray(results[param].([]interface{}))
+      return validators.ValidateBoolArray(results[param].([]interface{}))
 
     case "date":
       return validateDate(results[param].(interface{}))
@@ -143,10 +143,6 @@ func validateDateCustomFormat(date interface{}, format string) bool {
     return false
   }
   return matchFound
-}
-
-func ValidateBoolArray(arr []interface{}) bool {
-  return validators.CheckArrayForType(arr, "bool")
 }
 
 func validateDateArray(arr []interface{}) bool {
