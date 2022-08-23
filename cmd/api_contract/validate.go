@@ -4,6 +4,7 @@ import (
   "fmt"
   "encoding/json"
 	"github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/validators"
 )
 
 type EndpointData struct {
@@ -20,7 +21,7 @@ func Validate(bytes []byte, httpMethod string, endpoint string) (bool, string) {
 
   if foundEndpoint != nil {
     for param, paramType := range foundEndpoint.PayloadShape {
-      if !helpers.IsValidParam(param, paramType, results) {
+      if !validators.IsValidParam(param, paramType, results) {
         return false, fmt.Sprintf("The param `%s` does not match expected type `%s`", param, paramType)
       }
     }
