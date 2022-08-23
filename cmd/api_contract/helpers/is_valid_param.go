@@ -58,6 +58,22 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
       datatype, decorators, isArray := ParseDatatype(fmt.Sprintf("%s", paramType))
 
       switch datatype {
+      case "string":
+        if (len(decorators) == 0) {
+          return typeOfReturnedValue == paramType
+        }
+
+        format := findStringFormat(decorators)
+        if format == "" {
+          return false
+        }
+
+        if isArray {
+          return validateStringArrayCustomFormat(results[param].([]interface{}), format)
+        } else {
+          return validateStringCustomFormat(results[param].(interface{}), format)
+        }
+
       case "date":
         format := findDateFormat(decorators)
         if format == "" {
@@ -97,6 +113,30 @@ func validateDate(date interface{}) bool {
 func validateDatetime(date interface{}) bool {
   _, err := time.Parse(DATETIME_FORMAT, fmt.Sprintf("%s", date))
   return err == nil
+}
+
+func validateStringCustomFormat(str interface{}, format string) bool {
+  var matchFound bool
+  var err interface{}
+  switch(format) {
+  case "email":
+    matchFound, err = regexp.MatchString(`^.*@.*\..*$`, fmt.Sprintf("%s", str))
+
+  case "name":
+    matchFound, err = regexp.MatchString(`^[A-Za-z]*$`, fmt.Sprintf("%s", str))
+
+  case "fullname":
+    matchFound, err = regexp.MatchString(`^[A-Za-z]* [A-Za-z]*\s?[A-Za-z]{0,}$`, fmt.Sprintf("%s", str))
+
+  default:
+    panic(fmt.Sprintf("could not validate custom string %s to format %s", str, format))
+  }
+
+  if err != nil {
+    return false
+  }
+
+  return matchFound
 }
 
 func validateDatetimeCustomFormat(date interface{}, format string) bool {
@@ -143,6 +183,15 @@ func validateDateArray(arr []interface{}) bool {
   return true
 }
 
+func validateStringArrayCustomFormat(arr []interface{}, format string) bool {
+  for _, item := range arr {
+    if !validateStringCustomFormat(item, format) {
+      return false
+    }
+  }
+  return true
+}
+
 func validateDatetimeArray(arr []interface{}) bool {
   for _, item := range arr {
     if !validateDatetime(item) {
@@ -180,6 +229,18 @@ func checkArrayForType(arr []interface{}, expectedType string) bool {
   return true
 }
 
+func findStringFormat(arr []string) string {
+  if SliceContains(arr, "email") {
+    return "email"
+  } else if SliceContains(arr, "name") {
+    return "name"
+  } else if SliceContains(arr, "fullname") {
+    return "fullname"
+  } else {
+    return ""
+  }
+}
+
 func findDateFormat(arr []string) string {
   if SliceContains(arr, "mmddyyyy") || SliceContains(arr, "MMDDYYYY") {
     return Date.MMDDYYYY
@@ -197,6 +258,8 @@ func findDateFormat(arr []string) string {
 func findDatetimeFormat(arr []string) string {
   if SliceContains(arr, "ansic") {
     return time.ANSIC
+  } else if (SliceContains(arr, "iso861") || SliceContains(arr, "ISO861")) {
+    return time.RFC3339
   } else if (SliceContains(arr, "unix_date") || SliceContains(arr, "unix")) {
     return time.UnixDate
   } else if (SliceContains(arr, "ruby_date") || SliceContains(arr, "ruby")) {

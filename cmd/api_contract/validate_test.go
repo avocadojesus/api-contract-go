@@ -36,6 +36,7 @@ func TestValidate(t *testing.T) {
 
   expectValidPayload(t, "datatypes/datetime")
   expectValidPayload(t, "datatypes/datetime/ansic")
+  expectValidPayload(t, "datatypes/datetime/iso861")
   expectValidPayload(t, "datatypes/datetime/unix_date")
   expectValidPayload(t, "datatypes/datetime/ruby_date")
   expectValidPayload(t, "datatypes/datetime/rfc822")
@@ -58,6 +59,8 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "datatypes/number/invalid/bad_array_data_type")
 
   expectValidPayload(t, "datatypes/string")
+  expectValidPayload(t, "datatypes/string/email")
+  expectValidPayload(t, "datatypes/string/name")
   expectInvalidPayload(t, "datatypes/string/invalid/bad_data_type")
   expectInvalidPayload(t, "datatypes/string/invalid/bad_array_data_type")
 }
