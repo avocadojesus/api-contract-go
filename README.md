@@ -32,7 +32,7 @@ func Me(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-One might have an `endpoints.json` file reflecting this structure at the root of your repo, like so:
+One might have an `api-contract.json` file reflecting this structure at the root of your repo, like so:
 
 ```json
 {
@@ -45,7 +45,7 @@ One might have an `endpoints.json` file reflecting this structure at the root of
 }
 ```
 
-Within your spec file, you can import the `api-contract-go` package, and assert that the payload shape from your endpoint is in compliance with the expected shape described by your `endpoints.json` file.
+Within your spec file, you can import the `api-contract-go` package, and assert that the payload shape from your endpoint is in compliance with the expected shape described by your `api-contract.json` file.
 
 ```go
 package handlers_test
@@ -71,7 +71,7 @@ func TestMe(t *testing.T) {
 
 ## api_contract.Comply
 
-For the given `httpMethod` and `path`, raises an exception if the payload does not match the expected payload shape expressed in `endpoints.json` file.
+For the given `httpMethod` and `path`, raises an exception if the payload does not match the expected payload shape expressed in `api-contract.json` file.
 
 ### Params:
 

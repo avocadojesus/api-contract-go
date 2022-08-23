@@ -15,7 +15,7 @@ func Validate(bytes []byte, httpMethod string, endpoint string) (bool, string) {
   var results map[string]interface{}
   json.Unmarshal(bytes, &results)
 
-  endpoints := unmarshalJSONToEndpointData("./endpoints.json")
+  endpoints := unmarshalJSONToEndpointData("./api-contract.json")
   endpointKey := httpMethod + ":" + endpoint
   foundEndpoint := endpoints[endpointKey]
 
