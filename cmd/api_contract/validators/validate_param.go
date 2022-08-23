@@ -28,95 +28,98 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
 
   } else {
     typeOfReturnedValue := reflect.TypeOf(results[param]).String()
+    datatype, decorators, isArray := helpers.ParseDatatype(fmt.Sprintf("%s", paramType))
 
-    switch paramType {
-    case "bool[]":
-      return ValidateBoolArray(results[param].([]interface{}))
-
-    case "date":
-      return ValidateDate(results[param].(interface{}))
-
-    case "date[]":
-      return ValidateDateArray(results[param].([]interface{}))
-
-    case "datetime":
-      return ValidateDatetime(results[param].(interface{}))
-
-    case "datetime[]":
-      return ValidateDatetimeArray(results[param].([]interface{}))
-
-    case "number":
-      return ValidateNumber(results[param].(interface{}))
-
-    case "number[]":
-      return ValidateNumberArray(results[param].([]interface{}))
-
-    case "string[]":
-      return ValidateStringArray(results[param].([]interface{}))
-
-    default:
-      datatype, decorators, isArray := helpers.ParseDatatype(fmt.Sprintf("%s", paramType))
-
-      switch datatype {
-      case "string":
-        if (len(decorators) == 0) {
+    switch datatype {
+    case "string":
+      if (len(decorators) == 0) {
+        if isArray {
+          return ValidateStringArray(results[param].([]interface{}))
+        } else {
           return typeOfReturnedValue == paramType
         }
+      }
 
-        format := FindStringFormat(decorators)
-        if format == "" {
-          return false
-        }
+      format := FindStringFormat(decorators)
+      if format == "" {
+        return false
+      }
 
-        if isArray {
-          return ValidateStringArrayCustomFormat(results[param].([]interface{}), format)
-        } else {
-          return ValidateStringCustomFormat(results[param].(interface{}), format)
-        }
+      if isArray {
+        return ValidateStringArrayCustomFormat(results[param].([]interface{}), format)
+      } else {
+        return ValidateStringCustomFormat(results[param].(interface{}), format)
+      }
 
-      case "number":
-        if (len(decorators) == 0) {
-          return ValidateNumber(results[param].(interface{}))
-        }
-
-        format := FindNumberFormat(decorators)
-        if format == "" {
-          return false
-        }
-
-        if isArray {
-          return ValidateNumberArrayCustomFormat(results[param].([]interface{}), format)
-        } else {
-          return ValidateNumberCustomFormat(results[param].(interface{}), format)
-        }
-
-      case "date":
-        format := FindDateFormat(decorators)
-        if format == "" {
-          return false
-        }
-
-        if isArray {
-          return ValidateDateArrayCustomFormat(results[param].([]interface{}), format)
-        } else {
-          return ValidateDateCustomFormat(results[param].(interface{}), format)
-        }
-
-      case "datetime":
-        format := FindDatetimeFormat(decorators)
-        if format == "" {
-          return false
-        }
-
-        if isArray {
-          return ValidateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
-        } else {
-          return ValidateDatetimeCustomFormat(results[param].(interface{}), format)
-        }
-
-      default:
+    case "bool":
+      if isArray {
+        return ValidateBoolArray(results[param].([]interface{}))
+      } else {
         return typeOfReturnedValue == paramType
       }
+
+    case "number":
+      if (len(decorators) == 0) {
+        if isArray {
+          return ValidateNumberArray(results[param].([]interface{}))
+        } else {
+          return ValidateNumber(results[param].(interface{}))
+        }
+      }
+
+      format := FindNumberFormat(decorators)
+      if format == "" {
+        return false
+      }
+
+      if isArray {
+        return ValidateNumberArrayCustomFormat(results[param].([]interface{}), format)
+      } else {
+        return ValidateNumberCustomFormat(results[param].(interface{}), format)
+      }
+
+    case "date":
+      if (len(decorators) == 0) {
+        if isArray {
+          return ValidateDateArray(results[param].([]interface{}))
+        } else {
+          return ValidateDate(results[param].(interface{}))
+        }
+      }
+
+      format := FindDateFormat(decorators)
+      if format == "" {
+        return false
+      }
+
+      if isArray {
+        return ValidateDateArrayCustomFormat(results[param].([]interface{}), format)
+      } else {
+        return ValidateDateCustomFormat(results[param].(interface{}), format)
+      }
+
+    case "datetime":
+      if (len(decorators) == 0) {
+        if isArray {
+          return ValidateDatetimeArray(results[param].([]interface{}))
+        } else {
+          return ValidateDatetime(results[param].(interface{}))
+        }
+      }
+
+      format := FindDatetimeFormat(decorators)
+      if format == "" {
+        return false
+      }
+
+      if isArray {
+        return ValidateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
+      } else {
+        return ValidateDatetimeCustomFormat(results[param].(interface{}), format)
+      }
+
+    default:
+      return typeOfReturnedValue == paramType
     }
   }
 }
