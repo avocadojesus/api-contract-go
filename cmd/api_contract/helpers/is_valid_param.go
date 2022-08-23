@@ -47,10 +47,10 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
       return validateDatetimeArray(results[param].([]interface{}))
 
     case "number":
-      return validateNumber(results[param].(interface{}))
+      return validators.ValidateNumber(results[param].(interface{}))
 
     case "number[]":
-      return validateNumberArray(results[param].([]interface{}))
+      return validators.ValidateNumberArray(results[param].([]interface{}))
 
     case "string[]":
       return validators.ValidateStringArray(results[param].([]interface{}))
@@ -77,18 +77,18 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
 
       case "number":
         if (len(decorators) == 0) {
-          return validateNumber(results[param].(interface{}))
+          return validators.ValidateNumber(results[param].(interface{}))
         }
 
-        format := findNumberFormat(decorators)
+        format := validators.FindNumberFormat(decorators)
         if format == "" {
           return false
         }
 
         if isArray {
-          return validateNumberArrayCustomFormat(results[param].([]interface{}), format)
+          return validators.ValidateNumberArrayCustomFormat(results[param].([]interface{}), format)
         } else {
-          return validateNumberCustomFormat(results[param].(interface{}), format)
+          return validators.ValidateNumberCustomFormat(results[param].(interface{}), format)
         }
 
       case "date":
@@ -132,29 +132,6 @@ func validateDatetime(date interface{}) bool {
   return err == nil
 }
 
-func validateNumberCustomFormat(num interface{}, format string) bool {
-  var matchFound bool
-  var err interface{}
-  switch(format) {
-  case "bigint":
-    matchFound, err = regexp.MatchString(`^\d{1,}$`, fmt.Sprintf("%v", num))
-    break
-
-  case "float":
-    matchFound, err = regexp.MatchString(`^\d{1,}\.\d{1,}$`, fmt.Sprintf("%.2f", num))
-    break
-
-  default:
-    panic(fmt.Sprintf("could not validate custom string %s to format %s", num, format))
-  }
-
-  if err != nil {
-    return false
-  }
-
-  return matchFound
-}
-
 func validateDatetimeCustomFormat(date interface{}, format string) bool {
   _, err := time.Parse(format, fmt.Sprintf("%s", date))
   return err == nil
@@ -168,36 +145,13 @@ func validateDateCustomFormat(date interface{}, format string) bool {
   return matchFound
 }
 
-func validateNumber(item interface{}) bool {
-  itemType := reflect.TypeOf(item).String()
-  return itemType == "float64"
-}
-
 func ValidateBoolArray(arr []interface{}) bool {
   return validators.CheckArrayForType(arr, "bool")
-}
-
-func validateNumberArray(arr []interface{}) bool {
-  for _, item := range arr {
-    if !validateNumber(item) {
-      return false
-    }
-  }
-  return true
 }
 
 func validateDateArray(arr []interface{}) bool {
   for _, item := range arr {
     if !validateDate(item) {
-      return false
-    }
-  }
-  return true
-}
-
-func validateNumberArrayCustomFormat(arr []interface{}, format string) bool {
-  for _, item := range arr {
-    if !validateNumberCustomFormat(item, format) {
       return false
     }
   }
@@ -229,16 +183,6 @@ func validateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
     }
   }
   return true
-}
-
-func findNumberFormat(arr []string) string {
-  if validators.SliceContains(arr, "float") {
-    return "float"
-  } else if validators.SliceContains(arr, "bigint") {
-    return "bigint"
-  } else {
-    return ""
-  }
 }
 
 func findDateFormat(arr []string) string {
