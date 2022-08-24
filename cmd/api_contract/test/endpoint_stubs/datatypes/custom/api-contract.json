@@ -1,0 +1,16 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "user": "User",
+      "users": "User[]"
+    }
+  },
+  "config": {
+    "serializers": {
+      "User": {
+        "id": "number",
+        "email": "string:email"
+      }
+    }
+  }
+}

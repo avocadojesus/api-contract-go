@@ -10,7 +10,11 @@ import (
 const DATE_FORMAT = "2006-01-02"
 const DATETIME_FORMAT = time.RFC3339
 
-func ValidateParam(param string, paramType interface{}, results map[string]interface{}) bool {
+type ApiContractConfig struct {
+  Serializers map[string]map[string]interface{} `json:"serializers"`
+}
+
+func ValidateParam(param string, paramType interface{}, results map[string]interface{}, config ApiContractConfig) bool {
   if results[param] == nil {
     return false
   }
@@ -20,7 +24,7 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
   if helpers.IsMap(results[param]) && helpers.IsMap(paramType) {
     for key, _ := range results[param].(map[string]interface{}) {
       expectedType := paramType.(map[string]interface{})[key]
-      if !ValidateParam(key, expectedType, results[param].(map[string]interface{})) {
+      if !ValidateParam(key, expectedType, results[param].(map[string]interface{}), config) {
         return false
       }
     }
@@ -119,7 +123,37 @@ func ValidateParam(param string, paramType interface{}, results map[string]inter
       }
 
     default:
-      return typeOfReturnedValue == paramType
+      if config.Serializers[datatype] != nil {
+        return validateFromSerializer(config, datatype, results, param, isArray)
+      } else {
+        return typeOfReturnedValue == paramType
+      }
     }
   }
+}
+
+func validateFromSerializer(
+  config ApiContractConfig,
+  serializerName string,
+  results map[string]interface{},
+  param string,
+  isArray bool,
+) bool {
+  serializer := config.Serializers[serializerName]
+  for serializerParam, serializerParamType := range serializer {
+    if isArray {
+      obj := results[param].([]interface{})
+      for _, resultObj := range obj {
+        if !ValidateParam(serializerParam, serializerParamType, resultObj.(map[string]interface{}), config) {
+          return false
+        }
+      }
+    } else {
+      obj := results[param].(map[string]interface{})
+      if !ValidateParam(serializerParam, serializerParamType, obj, config) {
+        return false
+      }
+    }
+  }
+  return true
 }

@@ -272,3 +272,38 @@ The full list of decorators supported (varying by type) can be found below:
 * `datetime:stamp_milli`: generates **StampMilli**-formatted datetimes (i.e. `Aug 20 07:43:36.680`)
 * `datetime:stamp_nano`: generates **StampNano**-formatted datetimes (i.e. `Aug 20 07:47:27.520037000`)
 * `datetime:unix`: generates **Unix**-formatted datetimes (i.e. `Sat Aug 20 07:06:22 PDT 2022`)
+
+## Custom datatypes
+
+In addition to the standard datatypes, Api Contract allows for custom datatypes to be defined and used throughout your `api-contract.json` file. To make use of this feature, add a `config` block to your json file, nesting a `serializers` object within. All serializer definitions will go here, and will use `PascalCase` to distinguish from primary datatypes, like so:
+
+```js
+{
+  ...
+  "config": {
+    "serializers": {
+      "User": {
+        "id": "string:uuid",
+        "email": "string:email"
+      }
+    }
+  }
+}
+```
+
+Once a serializer is defined, it can be used throughout your json file, like so:
+
+```js
+{
+  "GET:/api/v1/users": {
+    "payload_shape": {
+      "users": "User[]"
+    }
+  },
+  "GET:/api/v1/users/:id": {
+    "payload_shape": {
+      "user": "User"
+    }
+  }
+}
+```
