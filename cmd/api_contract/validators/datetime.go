@@ -3,37 +3,67 @@ package validators
 import (
   "time"
   "fmt"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/config"
 )
 
-func ValidateDatetime(date interface{}) bool {
+func ValidateDatetime(
+  param string,
+  paramType interface{},
+  results map[string]interface{},
+  decorators []string,
+  typeOfReturnedValue string,
+  isArray bool,
+  conf config.ApiContractConfig,
+) bool {
+  if (len(decorators) == 0) {
+    if isArray {
+      return validateDatetimeArray(results[param].([]interface{}))
+    } else {
+      return validateDatetimeBasic(results[param].(interface{}))
+    }
+  }
+
+  format := findDatetimeFormat(decorators)
+  if format == "" {
+    return false
+  }
+
+  if isArray {
+    return validateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
+  } else {
+    return validateDatetimeCustomFormat(results[param].(interface{}), format)
+  }
+}
+
+func validateDatetimeBasic(date interface{}) bool {
   _, err := time.Parse(DATETIME_FORMAT, fmt.Sprintf("%s", date))
   return err == nil
 }
 
-func ValidateDatetimeCustomFormat(date interface{}, format string) bool {
+func validateDatetimeCustomFormat(date interface{}, format string) bool {
   _, err := time.Parse(format, fmt.Sprintf("%s", date))
   return err == nil
 }
 
-func ValidateDatetimeArray(arr []interface{}) bool {
+func validateDatetimeArray(arr []interface{}) bool {
   for _, item := range arr {
-    if !ValidateDatetime(item) {
+    if !validateDatetimeBasic(item) {
       return false
     }
   }
   return true
 }
 
-func ValidateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
+func validateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
   for _, item := range arr {
-    if !ValidateDatetimeCustomFormat(item, format) {
+    if !validateDatetimeCustomFormat(item, format) {
       return false
     }
   }
   return true
 }
 
-func FindDatetimeFormat(arr []string) string {
+func findDatetimeFormat(arr []string) string {
   if SliceContains(arr, "ansic") {
     return time.ANSIC
   } else if (SliceContains(arr, "iso861") || SliceContains(arr, "ISO861")) {

@@ -34,19 +34,19 @@ func ValidateParam(
 
     switch datatype {
     case "string":
-      return validateString(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
+      return ValidateString(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
 
     case "bool":
-      return validateBool(param, paramType, results, typeOfReturnedValue, isArray)
+      return ValidateBool(param, paramType, results, typeOfReturnedValue, isArray)
 
     case "number":
-      return validateNumber(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
+      return ValidateNumber(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
 
     case "date":
-      return validateDate(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
+      return ValidateDate(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
 
     case "datetime":
-      return validateDatetime(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
+      return ValidateDatetime(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)
 
     default:
       if conf.Serializers[datatype] != nil {
@@ -55,135 +55,5 @@ func ValidateParam(
         return typeOfReturnedValue == paramType
       }
     }
-  }
-}
-
-func validateDatetime(
-  param string,
-  paramType interface{},
-  results map[string]interface{},
-  decorators []string,
-  typeOfReturnedValue string,
-  isArray bool,
-  conf config.ApiContractConfig,
-) bool {
-  if (len(decorators) == 0) {
-    if isArray {
-      return ValidateDatetimeArray(results[param].([]interface{}))
-    } else {
-      return ValidateDatetime(results[param].(interface{}))
-    }
-  }
-
-  format := FindDatetimeFormat(decorators)
-  if format == "" {
-    return false
-  }
-
-  if isArray {
-    return ValidateDatetimeArrayCustomFormat(results[param].([]interface{}), format)
-  } else {
-    return ValidateDatetimeCustomFormat(results[param].(interface{}), format)
-  }
-}
-
-func validateDate(
-  param string,
-  paramType interface{},
-  results map[string]interface{},
-  decorators []string,
-  typeOfReturnedValue string,
-  isArray bool,
-  conf config.ApiContractConfig,
-) bool {
-  if (len(decorators) == 0) {
-    if isArray {
-      return ValidateDateArray(results[param].([]interface{}))
-    } else {
-      return ValidateDate(results[param].(interface{}))
-    }
-  }
-
-  format := FindDateFormat(decorators)
-  if format == "" {
-    return false
-  }
-
-  if isArray {
-    return ValidateDateArrayCustomFormat(results[param].([]interface{}), format)
-  } else {
-    return ValidateDateCustomFormat(results[param].(interface{}), format)
-  }
-}
-
-func validateNumber(
-  param string,
-  paramType interface{},
-  results map[string]interface{},
-  decorators []string,
-  typeOfReturnedValue string,
-  isArray bool,
-  conf config.ApiContractConfig,
-) bool {
-  if (len(decorators) == 0) {
-    if isArray {
-      return ValidateNumberArray(results[param].([]interface{}))
-    } else {
-      return ValidateNumber(results[param].(interface{}))
-    }
-  }
-
-  format := FindNumberFormat(decorators)
-  if format == "" {
-    return false
-  }
-
-  if isArray {
-    return ValidateNumberArrayCustomFormat(results[param].([]interface{}), format)
-  } else {
-    return ValidateNumberCustomFormat(results[param].(interface{}), format)
-  }
-}
-
-func validateBool(
-  param string,
-  paramType interface{},
-  results map[string]interface{},
-  typeOfReturnedValue string,
-  isArray bool,
-) bool {
-  if isArray {
-    return ValidateBoolArray(results[param].([]interface{}))
-  } else {
-    return typeOfReturnedValue == paramType
-  }
-}
-
-func validateString(
-  param string,
-  paramType interface{},
-  results map[string]interface{},
-  decorators []string,
-  typeOfReturnedValue string,
-  isArray bool,
-  conf config.ApiContractConfig,
-) bool {
-  if (len(decorators) == 0) {
-    if isArray {
-      return ValidateStringArray(results[param].([]interface{}))
-    } else {
-      return typeOfReturnedValue == paramType
-    }
-  }
-
-  format := FindStringFormat(decorators)
-  if format == "" {
-    return false
-  }
-
-  if isArray {
-    return ValidateStringArrayCustomFormat(results[param].([]interface{}), format)
-  } else {
-    return ValidateStringCustomFormat(results[param].(interface{}), format)
   }
 }

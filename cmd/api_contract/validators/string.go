@@ -3,9 +3,39 @@ package validators
 import (
   "regexp"
   "fmt"
+  "github.com/avocadojesus/api-contract-go/cmd/api_contract/config"
 )
 
-func ValidateStringCustomFormat(str interface{}, format string) bool {
+func ValidateString(
+  param string,
+  paramType interface{},
+  results map[string]interface{},
+  decorators []string,
+  typeOfReturnedValue string,
+  isArray bool,
+  conf config.ApiContractConfig,
+) bool {
+  if (len(decorators) == 0) {
+    if isArray {
+      return validateStringArray(results[param].([]interface{}))
+    } else {
+      return typeOfReturnedValue == paramType
+    }
+  }
+
+  format := findStringFormat(decorators)
+  if format == "" {
+    return false
+  }
+
+  if isArray {
+    return validateStringArrayCustomFormat(results[param].([]interface{}), format)
+  } else {
+    return validateStringCustomFormat(results[param].(interface{}), format)
+  }
+}
+
+func validateStringCustomFormat(str interface{}, format string) bool {
   var matchFound bool
   var err interface{}
   switch(format) {
@@ -32,20 +62,20 @@ func ValidateStringCustomFormat(str interface{}, format string) bool {
   return matchFound
 }
 
-func ValidateStringArray(arr []interface{}) bool {
+func validateStringArray(arr []interface{}) bool {
   return CheckArrayForType(arr, "string")
 }
 
-func ValidateStringArrayCustomFormat(arr []interface{}, format string) bool {
+func validateStringArrayCustomFormat(arr []interface{}, format string) bool {
   for _, item := range arr {
-    if !ValidateStringCustomFormat(item, format) {
+    if !validateStringCustomFormat(item, format) {
       return false
     }
   }
   return true
 }
 
-func FindStringFormat(arr []string) string {
+func findStringFormat(arr []string) string {
   if SliceContains(arr, "uuid") {
     return "uuid"
   } else if SliceContains(arr, "email") {

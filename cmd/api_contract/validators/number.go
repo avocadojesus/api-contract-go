@@ -4,14 +4,44 @@ import (
   "reflect"
   "regexp"
   "fmt"
+  "github.com/avocadojesus/api-contract-go/cmd/api_contract/config"
 )
 
-func ValidateNumber(item interface{}) bool {
+func ValidateNumber(
+  param string,
+  paramType interface{},
+  results map[string]interface{},
+  decorators []string,
+  typeOfReturnedValue string,
+  isArray bool,
+  conf config.ApiContractConfig,
+) bool {
+  if (len(decorators) == 0) {
+    if isArray {
+      return validateNumberArray(results[param].([]interface{}))
+    } else {
+      return validateNumberBasic(results[param].(interface{}))
+    }
+  }
+
+  format := findNumberFormat(decorators)
+  if format == "" {
+    return false
+  }
+
+  if isArray {
+    return validateNumberArrayCustomFormat(results[param].([]interface{}), format)
+  } else {
+    return validateNumberCustomFormat(results[param].(interface{}), format)
+  }
+}
+
+func validateNumberBasic(item interface{}) bool {
   itemType := reflect.TypeOf(item).String()
   return itemType == "float64"
 }
 
-func ValidateNumberCustomFormat(num interface{}, format string) bool {
+func validateNumberCustomFormat(num interface{}, format string) bool {
   var matchFound bool
   var err interface{}
   switch(format) {
@@ -38,25 +68,25 @@ func ValidateNumberCustomFormat(num interface{}, format string) bool {
   return matchFound
 }
 
-func ValidateNumberArray(arr []interface{}) bool {
+func validateNumberArray(arr []interface{}) bool {
   for _, item := range arr {
-    if !ValidateNumber(item) {
+    if !validateNumberBasic(item) {
       return false
     }
   }
   return true
 }
 
-func ValidateNumberArrayCustomFormat(arr []interface{}, format string) bool {
+func validateNumberArrayCustomFormat(arr []interface{}, format string) bool {
   for _, item := range arr {
-    if !ValidateNumberCustomFormat(item, format) {
+    if !validateNumberCustomFormat(item, format) {
       return false
     }
   }
   return true
 }
 
-func FindNumberFormat(arr []string) string {
+func findNumberFormat(arr []string) string {
   if SliceContains(arr, "int") {
     return "int"
   } else if SliceContains(arr, "float") {
