@@ -245,6 +245,7 @@ The full list of decorators supported (varying by type) can be found below:
 
 #### Decorator API
 
+* `string:uuid`: formats for uuid
 * `string:email`: loosely formats for email. The test server will generate random email addresses using `faker` if this is specified.
 * `string:name`: loosely formats for name. The test server will generate random names using `faker` if this is specified.
 * `string:name`: Similar to name, but will generate a full name instead of a first name.

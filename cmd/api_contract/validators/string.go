@@ -9,6 +9,9 @@ func ValidateStringCustomFormat(str interface{}, format string) bool {
   var matchFound bool
   var err interface{}
   switch(format) {
+  case "uuid":
+    matchFound, err = regexp.MatchString(`^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$`, fmt.Sprintf("%s", str))
+
   case "email":
     matchFound, err = regexp.MatchString(`^.*@.*\..*$`, fmt.Sprintf("%s", str))
 
@@ -43,7 +46,9 @@ func ValidateStringArrayCustomFormat(arr []interface{}, format string) bool {
 }
 
 func FindStringFormat(arr []string) string {
-  if SliceContains(arr, "email") {
+  if SliceContains(arr, "uuid") {
+    return "uuid"
+  } else if SliceContains(arr, "email") {
     return "email"
   } else if SliceContains(arr, "name") {
     return "name"

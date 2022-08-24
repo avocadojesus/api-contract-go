@@ -62,6 +62,7 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "datatypes/number/invalid/bad_array_data_type")
 
   expectValidPayload(t, "datatypes/string")
+  expectValidPayload(t, "datatypes/string/uuid")
   expectValidPayload(t, "datatypes/string/email")
   expectValidPayload(t, "datatypes/string/name")
   expectInvalidPayload(t, "datatypes/string/invalid/bad_data_type")
