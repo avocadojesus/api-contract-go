@@ -19,7 +19,7 @@ func ValidateStringCustomFormat(str interface{}, format string) bool {
     matchFound, err = regexp.MatchString(`^[A-Za-z]*$`, fmt.Sprintf("%s", str))
 
   case "fullname":
-    matchFound, err = regexp.MatchString(`^[A-Za-z]* [A-Za-z]*\s?[A-Za-z]{0,}$`, fmt.Sprintf("%s", str))
+    matchFound, err = regexp.MatchString(`^[A-Za-z']* [A-Za-z']*\s?[A-Za-z']{0,}$`, fmt.Sprintf("%s", str))
 
   default:
     panic(fmt.Sprintf("could not validate custom string %s to format %s", str, format))
