@@ -21,7 +21,7 @@ func Validate(bytes []byte, httpMethod string, endpoint string) (bool, string) {
 
   if foundEndpoint != nil {
     for param, paramType := range foundEndpoint.PayloadShape {
-      if !validators.IsValidParam(param, paramType, results) {
+      if !validators.ValidateParam(param, paramType, results) {
         return false, fmt.Sprintf("The param `%s` does not match expected type `%s`", param, paramType)
       }
     }

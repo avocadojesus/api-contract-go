@@ -56,6 +56,7 @@ func TestValidate(t *testing.T) {
 
   expectValidPayload(t, "datatypes/number")
   expectValidPayload(t, "datatypes/number/float")
+  expectValidPayload(t, "datatypes/number/int")
   expectValidPayload(t, "datatypes/number/bigint")
   expectInvalidPayload(t, "datatypes/number/invalid/bad_data_type")
   expectInvalidPayload(t, "datatypes/number/invalid/bad_array_data_type")

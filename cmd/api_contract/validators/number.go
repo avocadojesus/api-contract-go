@@ -15,6 +15,10 @@ func ValidateNumberCustomFormat(num interface{}, format string) bool {
   var matchFound bool
   var err interface{}
   switch(format) {
+  case "int":
+    matchFound, err = regexp.MatchString(`^\d{1,}$`, fmt.Sprintf("%v", num))
+    break
+
   case "bigint":
     matchFound, err = regexp.MatchString(`^\d{1,}$`, fmt.Sprintf("%v", num))
     break
@@ -53,7 +57,9 @@ func ValidateNumberArrayCustomFormat(arr []interface{}, format string) bool {
 }
 
 func FindNumberFormat(arr []string) string {
-  if SliceContains(arr, "float") {
+  if SliceContains(arr, "int") {
+    return "int"
+  } else if SliceContains(arr, "float") {
     return "float"
   } else if SliceContains(arr, "bigint") {
     return "bigint"

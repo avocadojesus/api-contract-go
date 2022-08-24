@@ -248,6 +248,7 @@ The full list of decorators supported (varying by type) can be found below:
 * `string:email`: loosely formats for email. The test server will generate random email addresses using `faker` if this is specified.
 * `string:name`: loosely formats for name. The test server will generate random names using `faker` if this is specified.
 * `string:name`: Similar to name, but will generate a full name instead of a first name.
+* `number:int`: creates an integer
 * `number:float`: creates a floating point number (with decimal precision of 2)
 * `number:bigint`: creates a large int, i.e. `580405389235143`
 * `date:yyyymmdd`: generates dates with the format `YYYY-MM-DD`

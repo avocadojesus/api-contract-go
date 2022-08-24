@@ -10,7 +10,7 @@ import (
 const DATE_FORMAT = "2006-01-02"
 const DATETIME_FORMAT = time.RFC3339
 
-func IsValidParam(param string, paramType interface{}, results map[string]interface{}) bool {
+func ValidateParam(param string, paramType interface{}, results map[string]interface{}) bool {
   if results[param] == nil {
     return false
   }
@@ -20,7 +20,7 @@ func IsValidParam(param string, paramType interface{}, results map[string]interf
   if helpers.IsMap(results[param]) && helpers.IsMap(paramType) {
     for key, _ := range results[param].(map[string]interface{}) {
       expectedType := paramType.(map[string]interface{})[key]
-      if !IsValidParam(key, expectedType, results[param].(map[string]interface{})) {
+      if !ValidateParam(key, expectedType, results[param].(map[string]interface{})) {
         return false
       }
     }
