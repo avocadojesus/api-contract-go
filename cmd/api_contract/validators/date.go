@@ -69,13 +69,13 @@ func validateDateArrayCustomFormat(arr []interface{}, format string) bool {
 }
 
 func findDateFormat(arr []string) string {
-  if SliceContains(arr, "mmddyyyy") || SliceContains(arr, "MMDDYYYY") {
+  if helpers.SliceContains(arr, "mmddyyyy") || helpers.SliceContains(arr, "MMDDYYYY") {
     return helpers.Date.MMDDYYYY
-  } else if SliceContains(arr, "mmddyy") || SliceContains(arr, "MMDDYY") {
+  } else if helpers.SliceContains(arr, "mmddyy") || helpers.SliceContains(arr, "MMDDYY") {
     return helpers.Date.MMDDYY
-  } else if SliceContains(arr, "yyyymmdd") || SliceContains(arr, "YYYYMMDD") {
+  } else if helpers.SliceContains(arr, "yyyymmdd") || helpers.SliceContains(arr, "YYYYMMDD") {
     return helpers.Date.YYYYMMDD
-  } else if SliceContains(arr, "yymmdd") || SliceContains(arr, "YYMMDD") {
+  } else if helpers.SliceContains(arr, "yymmdd") || helpers.SliceContains(arr, "YYMMDD") {
     return helpers.Date.YYMMDD
   } else {
     return ""

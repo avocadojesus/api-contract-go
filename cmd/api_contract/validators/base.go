@@ -17,12 +17,3 @@ func CheckArrayForType(arr []interface{}, expectedType string) bool {
   }
   return true
 }
-
-func SliceContains(arr []string, matchString string) bool {
-  for _, a := range arr {
-    if a == matchString {
-      return true
-    }
-  }
-  return false
-}

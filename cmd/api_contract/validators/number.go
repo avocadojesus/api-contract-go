@@ -5,6 +5,7 @@ import (
   "regexp"
   "fmt"
   "github.com/avocadojesus/api-contract-go/cmd/api_contract/config"
+  "github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
 )
 
 func ValidateNumber(
@@ -87,11 +88,11 @@ func validateNumberArrayCustomFormat(arr []interface{}, format string) bool {
 }
 
 func findNumberFormat(arr []string) string {
-  if SliceContains(arr, "int") {
+  if helpers.SliceContains(arr, "int") {
     return "int"
-  } else if SliceContains(arr, "float") {
+  } else if helpers.SliceContains(arr, "float") {
     return "float"
-  } else if SliceContains(arr, "bigint") {
+  } else if helpers.SliceContains(arr, "bigint") {
     return "bigint"
   } else {
     return ""

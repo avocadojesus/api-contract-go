@@ -1,0 +1,7 @@
+{
+  "POST:/api/v1/test": {
+    "payload_shape": {
+      "created_at": "datetime:ansic:optional"
+    }
+  }
+}

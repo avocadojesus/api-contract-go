@@ -4,6 +4,7 @@ import (
   "regexp"
   "fmt"
   "github.com/avocadojesus/api-contract-go/cmd/api_contract/config"
+  "github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
 )
 
 func ValidateString(
@@ -76,13 +77,13 @@ func validateStringArrayCustomFormat(arr []interface{}, format string) bool {
 }
 
 func findStringFormat(arr []string) string {
-  if SliceContains(arr, "uuid") {
+  if helpers.SliceContains(arr, "uuid") {
     return "uuid"
-  } else if SliceContains(arr, "email") {
+  } else if helpers.SliceContains(arr, "email") {
     return "email"
-  } else if SliceContains(arr, "name") {
+  } else if helpers.SliceContains(arr, "name") {
     return "name"
-  } else if SliceContains(arr, "fullname") {
+  } else if helpers.SliceContains(arr, "fullname") {
     return "fullname"
   } else {
     return ""

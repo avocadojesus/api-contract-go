@@ -23,10 +23,15 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "nesting/double_nested/invalid/bad_type_on_nested_param")
 
   expectValidPayload(t, "datatypes/bool")
+  expectValidPayload(t, "datatypes/bool/optional")
   expectInvalidPayload(t, "datatypes/bool/invalid/bad_data_type")
   expectInvalidPayload(t, "datatypes/bool/invalid/bad_array_data_type")
 
+  expectValidPayload(t, "datatypes/custom")
+  expectValidPayload(t, "datatypes/custom/optional")
+
   expectValidPayload(t, "datatypes/date")
+  expectValidPayload(t, "datatypes/date/optional")
   expectValidPayload(t, "datatypes/date/mmddyyyy")
   expectValidPayload(t, "datatypes/date/mmddyy")
   expectValidPayload(t, "datatypes/date/yyyymmdd")
@@ -35,6 +40,7 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "datatypes/date/invalid/bad_array_data_type")
 
   expectValidPayload(t, "datatypes/datetime")
+  expectValidPayload(t, "datatypes/datetime/optional")
   expectValidPayload(t, "datatypes/datetime/ansic")
   expectValidPayload(t, "datatypes/datetime/iso861")
   expectValidPayload(t, "datatypes/datetime/unix_date")
@@ -55,6 +61,7 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "datatypes/datetime/invalid/bad_array_data_type")
 
   expectValidPayload(t, "datatypes/number")
+  expectValidPayload(t, "datatypes/number/optional")
   expectValidPayload(t, "datatypes/number/float")
   expectValidPayload(t, "datatypes/number/int")
   expectValidPayload(t, "datatypes/number/bigint")
@@ -62,13 +69,12 @@ func TestValidate(t *testing.T) {
   expectInvalidPayload(t, "datatypes/number/invalid/bad_array_data_type")
 
   expectValidPayload(t, "datatypes/string")
+  expectValidPayload(t, "datatypes/string/optional")
   expectValidPayload(t, "datatypes/string/uuid")
   expectValidPayload(t, "datatypes/string/email")
   expectValidPayload(t, "datatypes/string/name")
   expectInvalidPayload(t, "datatypes/string/invalid/bad_data_type")
   expectInvalidPayload(t, "datatypes/string/invalid/bad_array_data_type")
-
-  expectValidPayload(t, "datatypes/custom")
 }
 
 func expectValidPayload(t *testing.T, endpointStubFolder string) {

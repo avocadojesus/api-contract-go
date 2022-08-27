@@ -13,13 +13,9 @@ func ValidateParam(
   results map[string]interface{},
   conf config.ApiContractConfig,
 ) bool {
-  if results[param] == nil {
-    return false
-  }
-
   // when using nested data structures, just check that they both are type map,
   // since each of their inner children will be tested separately
-  if helpers.IsMap(results[param]) && helpers.IsMap(paramType) {
+  if results[param] != nil && helpers.IsMap(results[param]) && helpers.IsMap(paramType) {
     for key, _ := range results[param].(map[string]interface{}) {
       expectedType := paramType.(map[string]interface{})[key]
       if !ValidateParam(key, expectedType, results[param].(map[string]interface{}), conf) {
@@ -29,9 +25,15 @@ func ValidateParam(
     return true
 
   } else {
-    typeOfReturnedValue := reflect.TypeOf(results[param]).String()
-    datatype, decorators, isArray := helpers.ParseDatatype(fmt.Sprintf("%s", paramType))
+    datatype, decorators, isArray, isOptional := helpers.ParseDatatype(fmt.Sprintf("%s", paramType))
 
+    if isOptional && results[param] == nil {
+      return true
+    } else if !isOptional && results[param] == nil {
+      return false
+    }
+
+    typeOfReturnedValue := reflect.TypeOf(results[param]).String()
     switch datatype {
     case "string":
       return ValidateString(param, paramType, results, decorators, typeOfReturnedValue, isArray, conf)

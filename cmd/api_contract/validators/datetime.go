@@ -4,6 +4,7 @@ import (
   "time"
   "fmt"
 	"github.com/avocadojesus/api-contract-go/cmd/api_contract/config"
+	"github.com/avocadojesus/api-contract-go/cmd/api_contract/helpers"
 )
 
 func ValidateDatetime(
@@ -64,53 +65,53 @@ func validateDatetimeArrayCustomFormat(arr []interface{}, format string) bool {
 }
 
 func findDatetimeFormat(arr []string) string {
-  if SliceContains(arr, "ansic") {
+  if helpers.SliceContains(arr, "ansic") {
     return time.ANSIC
-  } else if (SliceContains(arr, "iso861") || SliceContains(arr, "ISO861")) {
+  } else if (helpers.SliceContains(arr, "iso861") || helpers.SliceContains(arr, "ISO861")) {
     return time.RFC3339
-  } else if (SliceContains(arr, "unix_date") || SliceContains(arr, "unix")) {
+  } else if (helpers.SliceContains(arr, "unix_date") || helpers.SliceContains(arr, "unix")) {
     return time.UnixDate
-  } else if (SliceContains(arr, "ruby_date") || SliceContains(arr, "ruby")) {
+  } else if (helpers.SliceContains(arr, "ruby_date") || helpers.SliceContains(arr, "ruby")) {
     return time.RubyDate
-  } else if (SliceContains(arr, "rfc822") || SliceContains(arr, "RFC822")) {
+  } else if (helpers.SliceContains(arr, "rfc822") || helpers.SliceContains(arr, "RFC822")) {
     return time.RFC822
-  } else if (SliceContains(arr, "rfc822z") || SliceContains(arr, "RFC822Z")) {
+  } else if (helpers.SliceContains(arr, "rfc822z") || helpers.SliceContains(arr, "RFC822Z")) {
     return time.RFC822Z
-  } else if (SliceContains(arr, "rfc850") || SliceContains(arr, "RFC850")) {
+  } else if (helpers.SliceContains(arr, "rfc850") || helpers.SliceContains(arr, "RFC850")) {
     return time.RFC850
-  } else if (SliceContains(arr, "rfc1123") || SliceContains(arr, "RFC1123")) {
+  } else if (helpers.SliceContains(arr, "rfc1123") || helpers.SliceContains(arr, "RFC1123")) {
     return time.RFC1123
-  } else if (SliceContains(arr, "rfc1123z") || SliceContains(arr, "RFC1123Z")) {
+  } else if (helpers.SliceContains(arr, "rfc1123z") || helpers.SliceContains(arr, "RFC1123Z")) {
     return time.RFC1123Z
-  } else if (SliceContains(arr, "rfc3339") || SliceContains(arr, "RFC3339")) {
+  } else if (helpers.SliceContains(arr, "rfc3339") || helpers.SliceContains(arr, "RFC3339")) {
     return time.RFC3339
-  } else if (SliceContains(arr, "rfc3339_nano") || SliceContains(arr, "RFC3339Nano")) {
+  } else if (helpers.SliceContains(arr, "rfc3339_nano") || helpers.SliceContains(arr, "RFC3339Nano")) {
     return time.RFC3339Nano
-  } else if (SliceContains(arr, "kitchen") || SliceContains(arr, "Kitchen")) {
+  } else if (helpers.SliceContains(arr, "kitchen") || helpers.SliceContains(arr, "Kitchen")) {
     return time.Kitchen
   } else if
-    SliceContains(arr, "stamp") ||
-      SliceContains(arr, "Stamp") ||
-      SliceContains(arr, "timestamp") ||
-      SliceContains(arr, "Timestamp") {
+    helpers.SliceContains(arr, "stamp") ||
+      helpers.SliceContains(arr, "Stamp") ||
+      helpers.SliceContains(arr, "timestamp") ||
+      helpers.SliceContains(arr, "Timestamp") {
     return time.Stamp
   } else if
-    SliceContains(arr, "stamp_milli") ||
-      SliceContains(arr, "StampMilli") ||
-      SliceContains(arr, "timestamp_milli") ||
-      SliceContains(arr, "TimestampMilli") {
+    helpers.SliceContains(arr, "stamp_milli") ||
+      helpers.SliceContains(arr, "StampMilli") ||
+      helpers.SliceContains(arr, "timestamp_milli") ||
+      helpers.SliceContains(arr, "TimestampMilli") {
     return time.StampMilli
   } else if
-    SliceContains(arr, "stamp_micro") ||
-      SliceContains(arr, "StampMicro") ||
-      SliceContains(arr, "timestamp_micro") ||
-      SliceContains(arr, "TimestampMicro") {
+    helpers.SliceContains(arr, "stamp_micro") ||
+      helpers.SliceContains(arr, "StampMicro") ||
+      helpers.SliceContains(arr, "timestamp_micro") ||
+      helpers.SliceContains(arr, "TimestampMicro") {
     return time.StampMicro
   } else if
-    SliceContains(arr, "stamp_nano") ||
-      SliceContains(arr, "StampNano") ||
-      SliceContains(arr, "timestamp_nano") ||
-      SliceContains(arr, "TimestampNano") {
+    helpers.SliceContains(arr, "stamp_nano") ||
+      helpers.SliceContains(arr, "StampNano") ||
+      helpers.SliceContains(arr, "timestamp_nano") ||
+      helpers.SliceContains(arr, "TimestampNano") {
     return time.StampNano
   } else {
     return ""
